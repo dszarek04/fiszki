@@ -9,7 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "docker:up": "node scripts/docker-up.js",
+    "docker:down": "node scripts/docker-down.js"
   },
   "dependencies": {
     "@types/papaparse": "^5.5.2",

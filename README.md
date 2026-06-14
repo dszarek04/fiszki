@@ -88,43 +88,44 @@ On the very first `npm run dev`, portless generates a local CA and adds it to yo
 
 ## Running with Docker
 
-The production image uses Next.js standalone output (~100 MB, Node 24 Alpine).
+The production image uses Next.js standalone output (~100 MB, Node 24 Alpine) and is configured with `restart: unless-stopped` to run 24/7 in the background.
 
 ### 1. Build and start
 
+To start the container on the default port `3001` and automatically set up the `portless` alias:
+
 ```bash
-docker compose up --build -d
+npm run docker:up
 ```
 
-The container listens on **host port 3001**.
-
-### 2. Register the portless alias (once per machine)
+#### Customizing the Port
+If you want to run the container on a different host port (e.g. `4000`) instead of `3001`, you can specify it as an argument or environment variable:
 
 ```bash
-# Install portless globally if you haven't already
-npm install -g portless
+# As an argument
+npm run docker:up 4000
 
-# Trust the local CA (one-time)
-portless trust
-
-# Map fiszki.localhost -> localhost:3001
-portless alias fiszki 3001
+# Or using the --port flag
+npm run docker:up -- --port 4000
 ```
 
-Open **https://fiszki.localhost** — portless routes it to the Docker container transparently.
+Once started, you can access the application at **https://fiszki.localhost** — portless routes it to the Docker container transparently without showing any ports.
 
-### 3. Verify
+### 2. Verify
+
+You can list the active portless routes to verify the alias is registered:
 
 ```bash
-portless list
-# fiszki  ->  localhost:3001  (static alias)
+npx portless list
+# https://fiszki.localhost  ->  localhost:3001  (alias)
 ```
 
-### Tear down
+### 3. Stop and clean up
+
+To stop the container and remove the portless alias:
 
 ```bash
-portless alias --remove fiszki
-docker compose down
+npm run docker:down
 ```
 
 ---
@@ -139,6 +140,8 @@ docker compose down
 | `npm run start` | Serve production build |
 | `npm run lint` | ESLint |
 | `npm run type-check` | TypeScript `--noEmit` |
+| `npm run docker:up` | Build/run Docker container 24/7 + register portless alias |
+| `npm run docker:down` | Stop Docker container + remove portless alias |
 
 ---
 
