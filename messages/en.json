@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "home": "Workspace",
+    "theme": "Theme",
+    "language": "Language",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "dashboard": {
+    "title": "Flashcard Workspace",
+    "subtitle": "Import, organize and train with your flashcard decks",
+    "noDecks": "No decks yet",
+    "noDecksHint": "Import a CSV file to get started",
+    "import": "Import CSV",
+    "search": "Search cards…",
+    "searchResults": "{count} result",
+    "searchResultsPlural": "{count} results",
+    "cards": "{count} card",
+    "cardsPlural": "{count} cards",
+    "startTraining": "Train",
+    "deleteDeck": "Delete",
+    "renameDeck": "Rename",
+    "confirmDelete": "Delete deck \"{name}\"? This will also delete all {count} cards.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "created": "Created",
+    "emptySearch": "No cards match your search"
+  },
+  "import": {
+    "title": "Import Flashcards",
+    "tabPaste": "Paste Text",
+    "tabFile": "Upload File",
+    "pasteLabel": "Paste your flashcard text below",
+    "pastePlaceholder": "1. Question text\na) Option A\nb) Option B | b) Option B ~\n2. Next question | answer ~",
+    "dropzone": "Drop any text file here",
+    "dropzoneOr": "or click to browse",
+    "dropzoneAccept": "Accepts any plain-text file",
+    "configTitle": "Parser Settings",
+    "configSubtitle": "Adjust separators if your format differs from the defaults",
+    "qaSeparator": "Q/A separator",
+    "qaSeparatorHint": "Splits question from answer (last match). Supports escape sequences: \\n, \\t, \\r",
+    "cardSeparator": "Card separator",
+    "cardSeparatorHint": "Marks the end of each card. Default \\n = one card per line",
+    "deckName": "Deck name",
+    "deckNamePlaceholder": "e.g. Spanish Vocabulary",
+    "import": "Import {count} cards",
+    "cancel": "Cancel",
+    "preview": "Preview ({count} cards found)",
+    "previewSample": "Sample cards",
+    "parseErrors": "Parse warnings",
+    "noCards": "No cards found — check your separators",
+    "formatHint": "Default: question ; answer  (one per line). Use \\n, \\t, \\r for special chars."
+  },
+  "training": {
+    "flip": "Show Answer",
+    "correct": "Got it",
+    "incorrect": "Missed it",
+    "progress": "Progress",
+    "card": "Card",
+    "of": "of",
+    "spaceHint": "Space — flip card",
+    "arrowHint": "← A  mark wrong  ·  D →  mark correct",
+    "loading": "Loading deck…"
+  },
+  "summary": {
+    "title": "Session Complete!",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "score": "Score",
+    "restart": "Restart Session",
+    "reviewMistakes": "Review Mistakes Only",
+    "perfect": "🎉 Perfect score!",
+    "great": "Great work!",
+    "keep": "Keep practicing!",
+    "noMistakes": "No mistakes to review"
+  },
+  "settings": {
+    "title": "Session Settings",
+    "shuffle": "Shuffle cards",
+    "shuffleHint": "Randomize the order each time",
+    "chronological": "Chronological order",
+    "start": "Start Training",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "back": "Back",
+    "loading": "Loading…",
+    "error": "Something went wrong"
+  }
+}

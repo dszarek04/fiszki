@@ -1,0 +1,177 @@
+'use client';
+
+import { useCallback, useReducer } from 'react';
+import type { Card, CardResult, SessionPhase } from '@/types';
+
+// ─── State ────────────────────────────────────────────────────────────────────
+
+interface TrainingState {
+  cards: Card[];
+  originalCards: Card[];
+  currentIndex: number;
+  results: CardResult[];
+  isFlipped: boolean;
+  phase: SessionPhase;
+}
+
+const initialState: TrainingState = {
+  cards: [],
+  originalCards: [],
+  currentIndex: 0,
+  results: [],
+  isFlipped: false,
+  phase: 'idle',
+};
+
+// ─── Actions ──────────────────────────────────────────────────────────────────
+
+type Action =
+  | { type: 'START'; cards: Card[] }
+  | { type: 'FLIP' }
+  | { type: 'MARK'; correct: boolean }
+  | { type: 'RESTART' }
+  | { type: 'REVIEW_MISTAKES' };
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ─── Reducer ──────────────────────────────────────────────────────────────────
+
+function reducer(state: TrainingState, action: Action): TrainingState {
+  switch (action.type) {
+    case 'START': {
+      return {
+        ...state,
+        cards: action.cards,
+        originalCards: action.cards,
+        currentIndex: 0,
+        results: [],
+        isFlipped: false,
+        phase: 'training',
+      };
+    }
+
+    case 'FLIP': {
+      if (state.phase !== 'training') return state;
+      return { ...state, isFlipped: true };
+    }
+
+    case 'MARK': {
+      if (state.phase !== 'training' || !state.isFlipped) return state;
+
+      const currentCard = state.cards[state.currentIndex];
+      if (!currentCard?.id) return state;
+
+      const newResults: CardResult[] = [
+        ...state.results,
+        { cardId: currentCard.id, correct: action.correct },
+      ];
+
+      const nextIndex = state.currentIndex + 1;
+      const isLast = nextIndex >= state.cards.length;
+
+      return {
+        ...state,
+        results: newResults,
+        currentIndex: isLast ? state.currentIndex : nextIndex,
+        isFlipped: false,
+        phase: isLast ? 'summary' : 'training',
+      };
+    }
+
+    case 'RESTART': {
+      return {
+        ...state,
+        cards: state.originalCards,
+        currentIndex: 0,
+        results: [],
+        isFlipped: false,
+        phase: 'training',
+      };
+    }
+
+    case 'REVIEW_MISTAKES': {
+      const incorrectIds = new Set(
+        state.results.filter((r) => !r.correct).map((r) => r.cardId)
+      );
+      const mistakeCards = state.originalCards.filter(
+        (c) => c.id !== undefined && incorrectIds.has(c.id)
+      );
+
+      if (mistakeCards.length === 0) return state;
+
+      return {
+        ...state,
+        cards: mistakeCards,
+        currentIndex: 0,
+        results: [],
+        isFlipped: false,
+        phase: 'training',
+      };
+    }
+
+    default:
+      return state;
+  }
+}
+
+// ─── Hook ─────────────────────────────────────────────────────────────────────
+
+export function useTrainingSession() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const startSession = useCallback(
+    (cards: Card[], shuffleCards = false) => {
+      const orderedCards = shuffleCards ? shuffle(cards) : cards;
+      dispatch({ type: 'START', cards: orderedCards });
+    },
+    []
+  );
+
+  const flip = useCallback(() => {
+    dispatch({ type: 'FLIP' });
+  }, []);
+
+  const markCorrect = useCallback(() => {
+    dispatch({ type: 'MARK', correct: true });
+  }, []);
+
+  const markIncorrect = useCallback(() => {
+    dispatch({ type: 'MARK', correct: false });
+  }, []);
+
+  const restart = useCallback(() => {
+    dispatch({ type: 'RESTART' });
+  }, []);
+
+  const reviewMistakes = useCallback(() => {
+    dispatch({ type: 'REVIEW_MISTAKES' });
+  }, []);
+
+  const currentCard = state.cards[state.currentIndex] ?? null;
+  const correctCount = state.results.filter((r) => r.correct).length;
+  const incorrectCount = state.results.filter((r) => !r.correct).length;
+  const hasMistakes = incorrectCount > 0;
+
+  return {
+    ...state,
+    currentCard,
+    correctCount,
+    incorrectCount,
+    hasMistakes,
+    startSession,
+    flip,
+    markCorrect,
+    markIncorrect,
+    restart,
+    reviewMistakes,
+  };
+}

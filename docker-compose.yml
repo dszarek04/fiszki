@@ -1,0 +1,12 @@
+services:
+  fiszki:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Expose the container on a host port so portless can route to it.
+    # portless alias fiszki 3001  →  https://fiszki.localhost
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped

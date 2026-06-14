@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "home": "Obszar roboczy",
+    "theme": "Motyw",
+    "language": "Język",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "system": "Systemowy"
+  },
+  "dashboard": {
+    "title": "Obszar Fiszek",
+    "subtitle": "Importuj, zarządzaj i ucz się ze swoich zestawów fiszek",
+    "noDecks": "Brak zestawów",
+    "noDecksHint": "Zaimportuj plik CSV, aby zacząć",
+    "import": "Importuj CSV",
+    "search": "Szukaj fiszek…",
+    "searchResults": "{count} wynik",
+    "searchResultsPlural": "{count} wyników",
+    "cards": "{count} fiszka",
+    "cardsPlural": "{count} fiszek",
+    "startTraining": "Ucz się",
+    "deleteDeck": "Usuń",
+    "renameDeck": "Zmień nazwę",
+    "confirmDelete": "Usunąć zestaw \"{name}\"? Zostaną usunięte wszystkie {count} fiszki.",
+    "cancel": "Anuluj",
+    "confirm": "Usuń",
+    "created": "Dodano",
+    "emptySearch": "Brak wyników wyszukiwania"
+  },
+  "import": {
+    "title": "Importuj Fiszki",
+    "tabPaste": "Wklej tekst",
+    "tabFile": "Wczytaj plik",
+    "pasteLabel": "Wklej tekst z fiszkami poniżej",
+    "pastePlaceholder": "1. Treść pytania\na) Opcja A\nb) Opcja B | b) Opcja B ~\n2. Kolejne pytanie | odpowiedź ~",
+    "dropzone": "Upuść dowolny plik tekstowy tutaj",
+    "dropzoneOr": "lub kliknij, aby wybrać",
+    "dropzoneAccept": "Akceptuje pliki tekstowe",
+    "configTitle": "Ustawienia parsera",
+    "configSubtitle": "Dostosuj separatory jeśli Twój format jest inny",
+    "qaSeparator": "Separator P/O",
+    "qaSeparatorHint": "Oddziela pytanie od odpowiedzi (ostatnie wystąpienie). Obsługuje: \\n, \\t, \\r",
+    "cardSeparator": "Separator fiszek",
+    "cardSeparatorHint": "Oznacza koniec każdej fiszki. Domyślnie \\n = jedna fiszka na linię",
+    "deckName": "Nazwa zestawu",
+    "deckNamePlaceholder": "np. Słówka angielskie",
+    "import": "Importuj {count} fiszek",
+    "cancel": "Anuluj",
+    "preview": "Podgląd ({count} fiszek znaleziono)",
+    "previewSample": "Przykładowe fiszki",
+    "parseErrors": "Ostrzeżenia",
+    "noCards": "Nie znaleziono fiszek — sprawdź separatory",
+    "formatHint": "Domyślnie: pytanie ; odpowiedź (jedna na linię). Użyj \\n, \\t, \\r dla znaków specjalnych."
+  },
+  "training": {
+    "flip": "Pokaż odpowiedź",
+    "correct": "Wiedziałem/am",
+    "incorrect": "Nie wiedziałem/am",
+    "progress": "Postęp",
+    "card": "Fiszka",
+    "of": "z",
+    "spaceHint": "Spacja — odwróć fiszkę",
+    "arrowHint": "← A  błąd  ·  D →  dobrze",
+    "loading": "Ładowanie zestawu…"
+  },
+  "summary": {
+    "title": "Sesja zakończona!",
+    "correct": "Poprawnie",
+    "incorrect": "Błędnie",
+    "score": "Wynik",
+    "restart": "Zacznij od nowa",
+    "reviewMistakes": "Powtórz błędy",
+    "perfect": "🎉 Idealny wynik!",
+    "great": "Świetna robota!",
+    "keep": "Ćwicz dalej!",
+    "noMistakes": "Brak błędów do powtórzenia"
+  },
+  "settings": {
+    "title": "Ustawienia sesji",
+    "shuffle": "Losowa kolejność",
+    "shuffleHint": "Mieszaj fiszki za każdym razem",
+    "chronological": "Kolejność chronologiczna",
+    "start": "Rozpocznij naukę",
+    "cancel": "Anuluj"
+  },
+  "common": {
+    "back": "Wróć",
+    "loading": "Ładowanie…",
+    "error": "Wystąpił błąd"
+  }
+}
