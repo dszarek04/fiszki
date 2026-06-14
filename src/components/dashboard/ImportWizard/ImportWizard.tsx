@@ -91,7 +91,7 @@ export function ImportWizard() {
 
       {/* Step 1: Input Wizard */}
       <Dialog open={wizardOpen} onOpenChange={setWizardOpen}>
-        <DialogContent className="sm:max-w-xl">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">{t('title')}</DialogTitle>
           </DialogHeader>
@@ -136,7 +136,7 @@ export function ImportWizard() {
                   value={rawText}
                   onChange={(e) => setRawText(e.target.value)}
                   placeholder={`Question 1; Answer 1\nQuestion 2; Answer 2\nQuestion 3; Answer 3`}
-                  className="min-h-[200px] font-mono text-sm resize-none leading-relaxed"
+                  className="min-h-[200px] max-h-[300px] overflow-y-auto font-mono text-sm resize-none leading-relaxed"
                   spellCheck={false}
                 />
               </div>

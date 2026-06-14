@@ -4,7 +4,7 @@
   "private": true,
   "portless": "fiszki",
   "scripts": {
-    "dev": "portless next dev",
+    "dev": "portless run next dev",
     "dev:app": "next dev",
     "build": "next build",
     "start": "next start",
