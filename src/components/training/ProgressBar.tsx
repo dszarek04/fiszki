@@ -15,7 +15,6 @@ export function ProgressBar({
   currentIndex,
 }: ProgressBarProps) {
   const answered = results.length;
-  const remaining = totalCards - answered;
 
   return (
     <div className="w-full space-y-2" role="progressbar" aria-valuenow={answered} aria-valuemax={totalCards}>

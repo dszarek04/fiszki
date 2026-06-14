@@ -61,11 +61,11 @@ function reducer(state: TrainingState, action: Action): TrainingState {
 
     case 'FLIP': {
       if (state.phase !== 'training') return state;
-      return { ...state, isFlipped: true };
+      return { ...state, isFlipped: !state.isFlipped };
     }
 
     case 'MARK': {
-      if (state.phase !== 'training' || !state.isFlipped) return state;
+      if (state.phase !== 'training') return state;
 
       const currentCard = state.cards[state.currentIndex];
       if (!currentCard?.id) return state;

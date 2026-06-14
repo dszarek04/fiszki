@@ -38,19 +38,19 @@ export function useKeyboardShortcuts({
         case ' ':
         case 'Spacebar':
           e.preventDefault();
-          if (!isFlipped) onFlip();
+          onFlip();
           break;
         case 'ArrowRight':
         case 'd':
         case 'D':
           e.preventDefault();
-          if (isFlipped) onCorrect();
+          onCorrect();
           break;
         case 'ArrowLeft':
         case 'a':
         case 'A':
           e.preventDefault();
-          if (isFlipped) onIncorrect();
+          onIncorrect();
           break;
       }
     }

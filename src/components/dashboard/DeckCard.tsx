@@ -182,7 +182,9 @@ export function DeckCard({ deck, onDelete }: DeckCardProps) {
             <Button
               variant="destructive"
               onClick={() => {
-                deck.id && onDelete(deck.id);
+                if (deck.id) {
+                  onDelete(deck.id);
+                }
                 setDeleteOpen(false);
               }}
               id={`confirm-delete-${deck.id}`}

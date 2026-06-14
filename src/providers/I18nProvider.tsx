@@ -51,10 +51,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem('locale') as Locale | null;
     const detected: Locale = saved
       ? saved
-      : navigator.language.startsWith('pl')
+      : typeof navigator !== 'undefined' && navigator.language.startsWith('pl')
         ? 'pl'
         : 'en';
-    setLocaleState(detected);
+    const timer = setTimeout(() => {
+      setLocaleState(detected);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Load messages whenever locale changes

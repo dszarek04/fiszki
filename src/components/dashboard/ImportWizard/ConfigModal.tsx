@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   AlertCircle,
@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,6 @@ import {
   DEFAULT_PARSE_CONFIG,
   displayEscape,
   previewParse,
-  type ParsePreview,
   type TextParseConfig,
 } from '@/lib/textParser';
 
@@ -44,12 +43,13 @@ function SeparatorInput({
   onChange: (v: string) => void;
   placeholder?: string;
 }) {
-  // What the user sees and types
+  const [prevValue, setPrevValue] = useState(value);
   const [display, setDisplay] = useState(displayEscape(value));
 
-  useEffect(() => {
+  if (value !== prevValue) {
+    setPrevValue(value);
     setDisplay(displayEscape(value));
-  }, [value]);
+  }
 
   return (
     <Input
@@ -91,19 +91,18 @@ export function ConfigModal({
 
   const [deckName, setDeckName] = useState(initialDeckName);
   const [config, setConfig] = useState<TextParseConfig>(DEFAULT_PARSE_CONFIG);
-  const [preview, setPreview] = useState<ParsePreview | null>(null);
-
   // Re-run preview when text or config changes
-  useEffect(() => {
-    if (!rawText) return;
-    const p = previewParse(rawText, config);
-    setPreview(p);
+  const preview = useMemo(() => {
+    if (!rawText) return null;
+    return previewParse(rawText, config);
   }, [rawText, config]);
 
   // Sync deck name when it changes from parent
-  useEffect(() => {
+  const [prevInitialDeckName, setPrevInitialDeckName] = useState(initialDeckName);
+  if (initialDeckName !== prevInitialDeckName) {
+    setPrevInitialDeckName(initialDeckName);
     setDeckName(initialDeckName);
-  }, [initialDeckName]);
+  }
 
   function handleConfirm() {
     onConfirm(config, deckName || 'Untitled Deck');

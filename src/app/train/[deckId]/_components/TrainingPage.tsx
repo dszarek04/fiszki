@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ interface TrainingPageProps {
 
 export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
   const t = useTranslations('training');
-  const router = useRouter();
+  const tCommon = useTranslations('common');
 
   const { cards, isLoading } = useCards(deckId);
   const session = useTrainingSession();
@@ -74,13 +74,21 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
   return (
     <main className="flex flex-1 flex-col">
       {/* Top bar */}
-      <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4">
-        <Link href="/">
-          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-        </Link>
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+              <ArrowLeft className="h-4 w-4" />
+              {tCommon('back')}
+            </Button>
+          </Link>
+          <div className="text-sm font-medium text-muted-foreground">
+            {t('card')}{' '}
+            <span className="font-bold text-foreground">{session.currentIndex + 1}</span>{' '}
+            {t('of')}{' '}
+            <span className="font-bold text-foreground">{session.cards.length}</span>
+          </div>
+        </div>
         <ProgressBar
           totalCards={session.cards.length}
           results={session.results}
@@ -103,8 +111,6 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
           onFlip={session.flip}
           onCorrect={session.markCorrect}
           onIncorrect={session.markIncorrect}
-          currentIndex={session.currentIndex}
-          totalCards={session.cards.length}
         />
       </div>
     </main>

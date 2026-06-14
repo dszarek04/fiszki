@@ -10,8 +10,6 @@ interface SessionControlsProps {
   onFlip: () => void;
   onCorrect: () => void;
   onIncorrect: () => void;
-  currentIndex: number;
-  totalCards: number;
 }
 
 function KbdBadge({ children }: { children: React.ReactNode }) {
@@ -27,25 +25,15 @@ export function SessionControls({
   onFlip,
   onCorrect,
   onIncorrect,
-  currentIndex,
-  totalCards,
 }: SessionControlsProps) {
   const t = useTranslations('training');
 
   return (
     <div className="flex flex-col items-center gap-6 w-full">
-      {/* Card counter */}
-      <p className="text-sm font-medium text-muted-foreground">
-        {t('card')}{' '}
-        <span className="font-bold text-foreground">{currentIndex + 1}</span>{' '}
-        {t('of')}{' '}
-        <span className="font-bold text-foreground">{totalCards}</span>
-      </p>
-
       {/* Action buttons */}
       <div className="flex w-full max-w-lg items-center gap-3">
         {!isFlipped ? (
-          /* Flip button */
+          /* Reveal button */
           <Button
             id="flip-btn"
             onClick={onFlip}
@@ -91,22 +79,13 @@ export function SessionControls({
 
       {/* Keyboard hints */}
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-        {!isFlipped ? (
-          <>
-            <KbdBadge>Space</KbdBadge>
-            <span>flip card</span>
-          </>
-        ) : (
-          <>
-            <KbdBadge>←</KbdBadge>
-            <KbdBadge>A</KbdBadge>
-            <span>wrong</span>
-            <span className="mx-2 text-border">·</span>
-            <span>correct</span>
-            <KbdBadge>D</KbdBadge>
-            <KbdBadge>→</KbdBadge>
-          </>
-        )}
+        <KbdBadge>←</KbdBadge>
+        <KbdBadge>A</KbdBadge>
+        <span>wrong</span>
+        <span className="mx-2 text-border">·</span>
+        <span>correct</span>
+        <KbdBadge>D</KbdBadge>
+        <KbdBadge>→</KbdBadge>
       </div>
     </div>
   );

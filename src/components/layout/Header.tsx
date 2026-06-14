@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
-import { Moon, Sun, Monitor, Languages, BookOpen } from 'lucide-react';
+import { Moon, Sun, Monitor, Languages } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -18,17 +18,8 @@ export function Header() {
   const { locale, setLocale } = useLocale();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Brand */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
-            <BookOpen className="h-4 w-4 text-primary" />
-          </div>
-          <span className="text-sm font-semibold tracking-tight text-foreground/80">
-            {t('home')}
-          </span>
-        </div>
+    <header className="w-full">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-end px-4 sm:px-6">
 
         {/* Controls */}
         <div className="flex items-center gap-2">
