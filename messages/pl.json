@@ -50,7 +50,11 @@
     "previewSample": "Przykładowe fiszki",
     "parseErrors": "Ostrzeżenia",
     "noCards": "Nie znaleziono fiszek — sprawdź separatory",
-    "formatHint": "Domyślnie: pytanie ; odpowiedź (jedna na linię). Użyj \\n, \\t, \\r dla znaków specjalnych."
+    "formatHint": "Domyślnie: pytanie ; odpowiedź (jedna na linię). Użyj \\n, \\t, \\r dla znaków specjalnych.",
+    "continue": "Kontynuuj",
+    "importing": "Importowanie…",
+    "cards": "{count} fiszka",
+    "cardsPlural": "{count} fiszek"
   },
   "training": {
     "flip": "Pokaż odpowiedź",
@@ -59,9 +63,19 @@
     "progress": "Postęp",
     "card": "Fiszka",
     "of": "z",
-    "spaceHint": "Spacja — odwróć fiszkę",
+    "spaceHint": "odwróć",
     "arrowHint": "← A  błąd  ·  D →  dobrze",
-    "loading": "Ładowanie zestawu…"
+    "loading": "Ładowanie zestawu…",
+    "question": "Pytanie",
+    "answer": "Odpowiedź",
+    "space": "Spacja",
+    "toReveal": "aby pokazać",
+    "toHide": "aby ukryć",
+    "correctCount": "{count} poprawnie",
+    "incorrectCount": "{count} błędnie",
+    "backHint": "wstecz",
+    "wrongHint": "błąd",
+    "correctHint": "dobrze"
   },
   "summary": {
     "title": "Sesja zakończona!",

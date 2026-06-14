@@ -3,13 +3,15 @@
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ThumbsUp, ThumbsDown, Eye } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Eye, Undo2 } from 'lucide-react';
 
 interface SessionControlsProps {
   isFlipped: boolean;
   onFlip: () => void;
   onCorrect: () => void;
   onIncorrect: () => void;
+  canGoBack: boolean;
+  onGoBack: () => void;
 }
 
 function KbdBadge({ children }: { children: React.ReactNode }) {
@@ -25,6 +27,8 @@ export function SessionControls({
   onFlip,
   onCorrect,
   onIncorrect,
+  canGoBack,
+  onGoBack,
 }: SessionControlsProps) {
   const t = useTranslations('training');
 
@@ -32,6 +36,17 @@ export function SessionControls({
     <div className="flex flex-col items-center gap-6 w-full">
       {/* Action buttons */}
       <div className="flex w-full max-w-lg items-center gap-3">
+        {canGoBack && (
+          <Button
+            id="back-btn"
+            onClick={onGoBack}
+            variant="outline"
+            className="gap-2 border-border/60 py-5 w-[54px] shrink-0 shadow-md flex items-center justify-center text-muted-foreground hover:text-foreground"
+            aria-label="Previous card"
+          >
+            <Undo2 className="h-5 w-5" />
+          </Button>
+        )}
         {!isFlipped ? (
           /* Reveal button */
           <Button
@@ -78,12 +93,23 @@ export function SessionControls({
       </div>
 
       {/* Keyboard hints */}
-      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-center gap-y-1.5 gap-x-1.5 text-[11px] text-muted-foreground">
+        {canGoBack && (
+          <>
+            <KbdBadge>Backspace</KbdBadge>
+            <KbdBadge>B</KbdBadge>
+            <span>{t('backHint')}</span>
+            <span className="mx-1 text-border">·</span>
+          </>
+        )}
+        <KbdBadge>Space</KbdBadge>
+        <span>{t('spaceHint')}</span>
+        <span className="mx-1 text-border">·</span>
         <KbdBadge>←</KbdBadge>
         <KbdBadge>A</KbdBadge>
-        <span>wrong</span>
-        <span className="mx-2 text-border">·</span>
-        <span>correct</span>
+        <span>{t('wrongHint')}</span>
+        <span className="mx-1 text-border">·</span>
+        <span>{t('correctHint')}</span>
         <KbdBadge>D</KbdBadge>
         <KbdBadge>→</KbdBadge>
       </div>

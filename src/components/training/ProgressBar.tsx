@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { CardResult } from '@/types';
 
@@ -14,6 +15,7 @@ export function ProgressBar({
   results,
   currentIndex,
 }: ProgressBarProps) {
+  const t = useTranslations('training');
   const answered = results.length;
 
   return (
@@ -47,13 +49,13 @@ export function ProgressBar({
           {results.filter((r) => r.correct).length > 0 && (
             <span className="flex items-center gap-1 text-correct font-medium">
               <span className="h-2 w-2 rounded-full bg-correct" />
-              {results.filter((r) => r.correct).length} correct
+              {t('correctCount', { count: results.filter((r) => r.correct).length })}
             </span>
           )}
           {results.filter((r) => !r.correct).length > 0 && (
             <span className="flex items-center gap-1 text-incorrect font-medium">
               <span className="h-2 w-2 rounded-full bg-incorrect" />
-              {results.filter((r) => !r.correct).length} incorrect
+              {t('incorrectCount', { count: results.filter((r) => !r.correct).length })}
             </span>
           )}
         </div>

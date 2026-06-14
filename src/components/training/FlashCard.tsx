@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { Card } from '@/types';
 
@@ -10,6 +11,8 @@ interface FlashCardProps {
 }
 
 export function FlashCard({ card, isFlipped, onFlip }: FlashCardProps) {
+  const t = useTranslations('training');
+
   return (
     <div
       className="card-flip-scene w-full"
@@ -28,7 +31,7 @@ export function FlashCard({ card, isFlipped, onFlip }: FlashCardProps) {
           className="card-face flex flex-col items-center justify-center rounded-2xl border border-border/60 bg-card p-8 shadow-lg cursor-pointer hover:border-primary/40 hover:shadow-primary/10"
         >
           <div className="absolute top-4 left-4 rounded-lg bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
-            Question
+            {t('question')}
           </div>
 
           <div className="w-full max-w-2xl">
@@ -40,9 +43,9 @@ export function FlashCard({ card, isFlipped, onFlip }: FlashCardProps) {
           {!isFlipped && (
             <div className="absolute bottom-4 flex items-center gap-1.5 text-xs text-muted-foreground">
               <span className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px]">
-                Space
+                {t('space')}
               </span>
-              <span>to reveal</span>
+              <span>{t('toReveal')}</span>
             </div>
           )}
         </div>
@@ -52,7 +55,7 @@ export function FlashCard({ card, isFlipped, onFlip }: FlashCardProps) {
           className="card-face card-face-back flex flex-col items-center justify-center rounded-2xl border border-correct/30 bg-card p-8 shadow-lg cursor-pointer hover:border-correct/50 hover:shadow-correct/5"
         >
           <div className="absolute top-4 left-4 rounded-lg bg-correct/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-correct">
-            Answer
+            {t('answer')}
           </div>
 
           <div className="w-full max-w-2xl">
@@ -64,9 +67,9 @@ export function FlashCard({ card, isFlipped, onFlip }: FlashCardProps) {
           {isFlipped && (
             <div className="absolute bottom-4 flex items-center gap-1.5 text-xs text-muted-foreground">
               <span className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px]">
-                Space
+                {t('space')}
               </span>
-              <span>to hide</span>
+              <span>{t('toHide')}</span>
             </div>
           )}
         </div>

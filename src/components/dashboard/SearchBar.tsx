@@ -49,7 +49,7 @@ export function SearchBar({ onResults }: SearchBarProps) {
       {hasQuery && results.length > 0 && (
         <div className="absolute top-full mt-1 w-full z-50 rounded-xl border border-border bg-popover shadow-lg overflow-hidden">
           <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground border-b border-border">
-            {results.length} result{results.length !== 1 ? 's' : ''}
+            {results.length === 1 ? t('searchResults', { count: 1 }) : t('searchResultsPlural', { count: results.length })}
           </div>
           <ul className="max-h-60 overflow-y-auto">
             {results.slice(0, 8).map((card) => (

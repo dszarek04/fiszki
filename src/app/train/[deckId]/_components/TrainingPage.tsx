@@ -40,6 +40,8 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
     onFlip: session.flip,
     onCorrect: session.markCorrect,
     onIncorrect: session.markIncorrect,
+    canGoBack: session.canGoBack,
+    onGoBack: session.goBack,
   });
 
   // ── Loading ────────────────────────────────────────────────────────────────
@@ -97,7 +99,7 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
       </div>
 
       {/* Card area */}
-      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-8 px-4 py-6">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-start gap-8 px-4 pt-4 pb-12 sm:pt-8">
         {session.currentCard && (
           <FlashCard
             card={session.currentCard}
@@ -111,6 +113,8 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
           onFlip={session.flip}
           onCorrect={session.markCorrect}
           onIncorrect={session.markIncorrect}
+          canGoBack={session.canGoBack}
+          onGoBack={session.goBack}
         />
       </div>
     </main>

@@ -9,6 +9,8 @@ interface KeyboardShortcutsConfig {
   onFlip: () => void;
   onCorrect: () => void;
   onIncorrect: () => void;
+  canGoBack: boolean;
+  onGoBack: () => void;
 }
 
 // ─── useKeyboardShortcuts ─────────────────────────────────────────────────────
@@ -17,6 +19,7 @@ interface KeyboardShortcutsConfig {
 //   Space        → flip card (only when not yet flipped)
 //   ArrowRight / D → mark correct (only when flipped)
 //   ArrowLeft  / A → mark incorrect (only when flipped)
+//   Backspace  / B → go back to previous card (only when canGoBack is true)
 //
 
 export function useKeyboardShortcuts({
@@ -25,6 +28,8 @@ export function useKeyboardShortcuts({
   onFlip,
   onCorrect,
   onIncorrect,
+  canGoBack,
+  onGoBack,
 }: KeyboardShortcutsConfig) {
   useEffect(() => {
     if (phase !== 'training') return;
@@ -52,10 +57,18 @@ export function useKeyboardShortcuts({
           e.preventDefault();
           onIncorrect();
           break;
+        case 'Backspace':
+        case 'b':
+        case 'B':
+          if (canGoBack) {
+            e.preventDefault();
+            onGoBack();
+          }
+          break;
       }
     }
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [phase, isFlipped, onFlip, onCorrect, onIncorrect]);
+  }, [phase, isFlipped, onFlip, onCorrect, onIncorrect, canGoBack, onGoBack]);
 }

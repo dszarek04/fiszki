@@ -50,7 +50,11 @@
     "previewSample": "Sample cards",
     "parseErrors": "Parse warnings",
     "noCards": "No cards found — check your separators",
-    "formatHint": "Default: question ; answer  (one per line). Use \\n, \\t, \\r for special chars."
+    "formatHint": "Default: question ; answer  (one per line). Use \\n, \\t, \\r for special chars.",
+    "continue": "Continue",
+    "importing": "Importing…",
+    "cards": "{count} card",
+    "cardsPlural": "{count} cards"
   },
   "training": {
     "flip": "Show Answer",
@@ -59,9 +63,19 @@
     "progress": "Progress",
     "card": "Card",
     "of": "of",
-    "spaceHint": "Space — flip card",
+    "spaceHint": "flip",
     "arrowHint": "← A  mark wrong  ·  D →  mark correct",
-    "loading": "Loading deck…"
+    "loading": "Loading deck…",
+    "question": "Question",
+    "answer": "Answer",
+    "space": "Space",
+    "toReveal": "to reveal",
+    "toHide": "to hide",
+    "correctCount": "{count} correct",
+    "incorrectCount": "{count} incorrect",
+    "backHint": "back",
+    "wrongHint": "wrong",
+    "correctHint": "correct"
   },
   "summary": {
     "title": "Session Complete!",

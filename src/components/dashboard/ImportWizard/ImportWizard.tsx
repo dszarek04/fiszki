@@ -157,7 +157,7 @@ export function ImportWizard() {
               disabled={!rawText.trim()}
               id="proceed-to-config"
             >
-              Continue →
+              {t('continue')} →
             </Button>
           </div>
         </DialogContent>

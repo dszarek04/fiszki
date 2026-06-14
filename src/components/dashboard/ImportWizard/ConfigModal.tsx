@@ -203,7 +203,7 @@ export function ConfigModal({
                     className="border-correct/30 bg-correct/10 text-correct text-xs"
                   >
                     <CheckCircle2 className="mr-1 h-3 w-3" />
-                    {preview.totalCards} cards
+                    {preview.totalCards === 1 ? t('cards', { count: 1 }) : t('cardsPlural', { count: preview.totalCards })}
                   </Badge>
                 ) : (
                   <Badge
@@ -274,7 +274,7 @@ export function ConfigModal({
             {isImporting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Importing…
+                {t('importing')}
               </>
             ) : (
               t('import', { count: preview?.totalCards ?? 0 })

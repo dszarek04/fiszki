@@ -104,7 +104,7 @@ export function DeckCard({ deck, onDelete }: DeckCardProps) {
               variant="secondary"
               className="text-xs font-medium"
             >
-              {deck.cardCount} card{deck.cardCount !== 1 ? 's' : ''}
+              {deck.cardCount === 1 ? t('cards', { count: 1 }) : t('cardsPlural', { count: deck.cardCount })}
             </Badge>
             <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <Calendar className="h-3 w-3" />

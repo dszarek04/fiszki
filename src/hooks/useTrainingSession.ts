@@ -29,6 +29,7 @@ type Action =
   | { type: 'START'; cards: Card[] }
   | { type: 'FLIP' }
   | { type: 'MARK'; correct: boolean }
+  | { type: 'BACK' }
   | { type: 'RESTART' }
   | { type: 'REVIEW_MISTAKES' };
 
@@ -84,6 +85,16 @@ function reducer(state: TrainingState, action: Action): TrainingState {
         currentIndex: isLast ? state.currentIndex : nextIndex,
         isFlipped: false,
         phase: isLast ? 'summary' : 'training',
+      };
+    }
+
+    case 'BACK': {
+      if (state.phase !== 'training' || state.currentIndex === 0) return state;
+      return {
+        ...state,
+        currentIndex: state.currentIndex - 1,
+        results: state.results.slice(0, -1),
+        isFlipped: false,
       };
     }
 
@@ -148,6 +159,10 @@ export function useTrainingSession() {
     dispatch({ type: 'MARK', correct: false });
   }, []);
 
+  const goBack = useCallback(() => {
+    dispatch({ type: 'BACK' });
+  }, []);
+
   const restart = useCallback(() => {
     dispatch({ type: 'RESTART' });
   }, []);
@@ -160,6 +175,7 @@ export function useTrainingSession() {
   const correctCount = state.results.filter((r) => r.correct).length;
   const incorrectCount = state.results.filter((r) => !r.correct).length;
   const hasMistakes = incorrectCount > 0;
+  const canGoBack = state.phase === 'training' && state.currentIndex > 0;
 
   return {
     ...state,
@@ -167,10 +183,12 @@ export function useTrainingSession() {
     correctCount,
     incorrectCount,
     hasMistakes,
+    canGoBack,
     startSession,
     flip,
     markCorrect,
     markIncorrect,
+    goBack,
     restart,
     reviewMistakes,
   };
