@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { ImportWizard } from '@/components/dashboard/ImportWizard/ImportWizard';
 import { SearchBar } from '@/components/dashboard/SearchBar';
 import { DeckList } from '@/components/dashboard/DeckList';
+import { ResumeSessionBanner } from '@/components/dashboard/ResumeSessionBanner';
 
 export function DashboardPage() {
   const t = useTranslations('dashboard');
@@ -28,6 +29,9 @@ export function DashboardPage() {
             <ImportWizard />
           </div>
         </div>
+
+        {/* Resume active training session */}
+        <ResumeSessionBanner />
 
         {/* Deck grid */}
         <DeckList />

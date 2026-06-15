@@ -25,7 +25,11 @@
     "cancel": "Cancel",
     "confirm": "Delete",
     "created": "Created",
-    "emptySearch": "No cards match your search"
+    "emptySearch": "No cards match your search",
+    "resumeTitle": "Resume Last Session",
+    "resumeSubtitle": "You were practicing \"{name}\" ({current}/{total} cards)",
+    "resumeButton": "Continue",
+    "resumeDiscard": "Discard"
   },
   "import": {
     "title": "Import Flashcards",

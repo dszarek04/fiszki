@@ -52,6 +52,7 @@ export function DeckCard({ deck, onDelete }: DeckCardProps) {
   }).format(deck.createdAt);
 
   function handleStartTraining() {
+    localStorage.removeItem('fiszki_training_session');
     const url = `/train/${deck.id}${shuffle ? '?shuffle=1' : ''}`;
     router.push(url);
     setSettingsOpen(false);

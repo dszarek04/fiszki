@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '@/lib/db';
 
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { FlashCard } from '@/components/training/FlashCard';
+import { FlashCard, type FlashCardHandle } from '@/components/training/FlashCard';
 import { ProgressBar } from '@/components/training/ProgressBar';
 import { SessionControls } from '@/components/training/SessionControls';
 import { SummaryScreen } from '@/components/training/SummaryScreen';
@@ -24,29 +26,31 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
   const tCommon = useTranslations('common');
 
   const { cards, isLoading } = useCards(deckId);
-  const session = useTrainingSession();
+  const deck = useLiveQuery(() => db.decks.get(deckId), [deckId]);
+  const session = useTrainingSession(deckId);
+  const cardRef = useRef<FlashCardHandle>(null);
 
   // Start session once cards are loaded
   useEffect(() => {
-    if (!isLoading && cards.length > 0 && session.phase === 'idle') {
-      session.startSession(cards, shuffle);
+    if (!isLoading && deck && cards.length > 0 && session.isSessionLoaded && session.phase === 'idle') {
+      session.startSession(cards, shuffle, deck.name);
     }
-  }, [isLoading, cards, shuffle]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isLoading, deck, cards, shuffle, session.isSessionLoaded, session.phase, session]);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
     phase: session.phase,
     isFlipped: session.isFlipped,
     onFlip: session.flip,
-    onCorrect: session.markCorrect,
-    onIncorrect: session.markIncorrect,
+    onCorrect: () => cardRef.current?.swipeRight(),
+    onIncorrect: () => cardRef.current?.swipeLeft(),
     canGoBack: session.canGoBack,
     onGoBack: session.goBack,
   });
 
   // ── Loading ────────────────────────────────────────────────────────────────
 
-  if (isLoading || session.phase === 'idle') {
+  if (isLoading || !deck || !session.isSessionLoaded || session.phase === 'idle') {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -74,7 +78,7 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
   // ── Training ───────────────────────────────────────────────────────────────
 
   return (
-    <main className="flex flex-1 flex-col">
+    <main className="flex flex-1 flex-col overflow-x-hidden">
       {/* Top bar */}
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 py-4">
         <div className="flex items-center justify-between">
@@ -102,17 +106,21 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-start gap-8 px-4 pt-4 pb-12 sm:pt-8">
         {session.currentCard && (
           <FlashCard
+            key={session.currentCard.id}
+            ref={cardRef}
             card={session.currentCard}
             isFlipped={session.isFlipped}
             onFlip={session.flip}
+            onSwipeLeft={session.markIncorrect}
+            onSwipeRight={session.markCorrect}
           />
         )}
 
         <SessionControls
           isFlipped={session.isFlipped}
           onFlip={session.flip}
-          onCorrect={session.markCorrect}
-          onIncorrect={session.markIncorrect}
+          onCorrect={() => cardRef.current?.swipeRight()}
+          onIncorrect={() => cardRef.current?.swipeLeft()}
           canGoBack={session.canGoBack}
           onGoBack={session.goBack}
         />

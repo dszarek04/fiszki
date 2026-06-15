@@ -1,11 +1,15 @@
 'use client';
 
-import { useCallback, useReducer } from 'react';
+import { useCallback, useReducer, useEffect, useState } from 'react';
 import type { Card, CardResult, SessionPhase } from '@/types';
+
+const LOCAL_STORAGE_KEY = 'fiszki_training_session';
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
 interface TrainingState {
+  deckId?: number;
+  deckName?: string;
   cards: Card[];
   originalCards: Card[];
   currentIndex: number;
@@ -26,12 +30,14 @@ const initialState: TrainingState = {
 // ─── Actions ──────────────────────────────────────────────────────────────────
 
 type Action =
-  | { type: 'START'; cards: Card[] }
+  | { type: 'START'; cards: Card[]; deckId?: number; deckName?: string }
   | { type: 'FLIP' }
   | { type: 'MARK'; correct: boolean }
   | { type: 'BACK' }
   | { type: 'RESTART' }
-  | { type: 'REVIEW_MISTAKES' };
+  | { type: 'REVIEW_MISTAKES' }
+  | { type: 'RESTORE'; session: TrainingState }
+  | { type: 'CLEAR' };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -51,6 +57,8 @@ function reducer(state: TrainingState, action: Action): TrainingState {
     case 'START': {
       return {
         ...state,
+        deckId: action.deckId,
+        deckName: action.deckName,
         cards: action.cards,
         originalCards: action.cards,
         currentIndex: 0,
@@ -101,7 +109,6 @@ function reducer(state: TrainingState, action: Action): TrainingState {
     case 'RESTART': {
       return {
         ...state,
-        cards: state.originalCards,
         currentIndex: 0,
         results: [],
         isFlipped: false,
@@ -129,6 +136,14 @@ function reducer(state: TrainingState, action: Action): TrainingState {
       };
     }
 
+    case 'RESTORE': {
+      return action.session;
+    }
+
+    case 'CLEAR': {
+      return initialState;
+    }
+
     default:
       return state;
   }
@@ -136,15 +151,48 @@ function reducer(state: TrainingState, action: Action): TrainingState {
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export function useTrainingSession() {
+export function useTrainingSession(currentDeckId?: number) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isSessionLoaded, setIsSessionLoaded] = useState(false);
+
+  // Restore session from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (
+          parsed &&
+          typeof parsed === 'object' &&
+          parsed.phase === 'training' &&
+          (currentDeckId === undefined || parsed.deckId === currentDeckId)
+        ) {
+          dispatch({ type: 'RESTORE', session: parsed });
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load session from localStorage', e);
+    } finally {
+      setIsSessionLoaded(true);
+    }
+  }, [currentDeckId]);
+
+  // Persist session to localStorage on changes
+  useEffect(() => {
+    if (!isSessionLoaded) return;
+    if (state.phase === 'training') {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+    } else if (state.phase === 'summary' || state.phase === 'idle') {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+  }, [state, isSessionLoaded]);
 
   const startSession = useCallback(
-    (cards: Card[], shuffleCards = false) => {
+    (cards: Card[], shuffleCards = false, deckName?: string) => {
       const orderedCards = shuffleCards ? shuffle(cards) : cards;
-      dispatch({ type: 'START', cards: orderedCards });
+      dispatch({ type: 'START', cards: orderedCards, deckId: currentDeckId, deckName });
     },
-    []
+    [currentDeckId]
   );
 
   const flip = useCallback(() => {
@@ -171,6 +219,11 @@ export function useTrainingSession() {
     dispatch({ type: 'REVIEW_MISTAKES' });
   }, []);
 
+  const clearSession = useCallback(() => {
+    dispatch({ type: 'CLEAR' });
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  }, []);
+
   const currentCard = state.cards[state.currentIndex] ?? null;
   const correctCount = state.results.filter((r) => r.correct).length;
   const incorrectCount = state.results.filter((r) => !r.correct).length;
@@ -184,6 +237,7 @@ export function useTrainingSession() {
     incorrectCount,
     hasMistakes,
     canGoBack,
+    isSessionLoaded,
     startSession,
     flip,
     markCorrect,
@@ -191,5 +245,6 @@ export function useTrainingSession() {
     goBack,
     restart,
     reviewMistakes,
+    clearSession,
   };
 }

@@ -25,7 +25,11 @@
     "cancel": "Anuluj",
     "confirm": "Usuń",
     "created": "Dodano",
-    "emptySearch": "Brak wyników wyszukiwania"
+    "emptySearch": "Brak wyników wyszukiwania",
+    "resumeTitle": "Wznów ostatnią sesję",
+    "resumeSubtitle": "Uczyłeś/aś się zestawu \"{name}\" ({current} z {total} fiszek)",
+    "resumeButton": "Kontynuuj",
+    "resumeDiscard": "Odrzuć"
   },
   "import": {
     "title": "Importuj Fiszki",
