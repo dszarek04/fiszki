@@ -88,12 +88,6 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
               {tCommon('back')}
             </Button>
           </Link>
-          <div className="text-sm font-medium text-muted-foreground">
-            {t('card')}{' '}
-            <span className="font-bold text-foreground">{session.currentIndex + 1}</span>{' '}
-            {t('of')}{' '}
-            <span className="font-bold text-foreground">{session.cards.length}</span>
-          </div>
         </div>
         <ProgressBar
           totalCards={session.cards.length}

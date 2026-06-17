@@ -54,6 +54,14 @@ function CardSwipeOverlay({ x }: { x: number }) {
   );
 }
 
+const getFontSizeClass = (text: string) => {
+  const len = text.length;
+  if (len > 350) return 'text-xs sm:text-xs leading-tight';
+  if (len > 220) return 'text-sm sm:text-sm leading-normal';
+  if (len > 120) return 'text-base sm:text-base leading-relaxed';
+  return 'text-lg sm:text-xl leading-relaxed';
+};
+
 export const FlashCard = forwardRef<FlashCardHandle, FlashCardProps>(
   ({ card, isFlipped, onFlip, onSwipeLeft, onSwipeRight }, ref) => {
     const t = useTranslations('training');
@@ -179,8 +187,11 @@ export const FlashCard = forwardRef<FlashCardHandle, FlashCardProps>(
               {t('question')}
             </div>
 
-            <div className="w-full max-w-2xl">
-              <pre className="whitespace-pre-wrap break-words text-center font-sans text-lg font-semibold leading-relaxed text-foreground sm:text-xl">
+            <div className="w-full max-w-2xl overflow-y-auto max-h-[180px] sm:max-h-[260px] py-1">
+              <pre className={cn(
+                "whitespace-pre-wrap break-words text-center font-sans font-semibold text-foreground",
+                getFontSizeClass(card.front)
+              )}>
                 {card.front}
               </pre>
             </div>

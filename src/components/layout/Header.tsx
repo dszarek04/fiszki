@@ -18,7 +18,7 @@ const UKFlag = () => (
     width="16"
     height="12"
     viewBox="0 0 60 30"
-    className="rounded-xs border border-muted-foreground/20 shrink-0"
+    className="rounded-xs shrink-0"
     aria-hidden="true"
   >
     <rect width="60" height="30" fill="#012169" />
@@ -34,7 +34,7 @@ const PolandFlag = () => (
     width="16"
     height="12"
     viewBox="0 0 16 10"
-    className="rounded-xs border border-muted-foreground/20 shrink-0"
+    className="rounded-xs shrink-0"
     aria-hidden="true"
   >
     <rect width="16" height="5" fill="#fff" />

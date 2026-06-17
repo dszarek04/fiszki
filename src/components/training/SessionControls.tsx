@@ -35,61 +35,66 @@ export function SessionControls({
   return (
     <div className="flex flex-col items-center gap-6 w-full">
       {/* Action buttons */}
-      <div className="flex w-full max-w-lg items-center gap-3">
+      <div className="relative flex w-full max-w-lg items-center justify-center">
         {canGoBack && (
           <Button
             id="back-btn"
             onClick={onGoBack}
             variant="outline"
-            className="gap-2 border-border/60 py-5 w-[54px] shrink-0 shadow-md flex items-center justify-center text-muted-foreground hover:text-foreground"
+            className="absolute left-0 gap-2 border-border/60 py-5 w-[54px] shrink-0 shadow-md flex items-center justify-center text-muted-foreground hover:text-foreground"
             aria-label="Previous card"
           >
             <Undo2 className="h-5 w-5" />
           </Button>
         )}
-        {!isFlipped ? (
-          /* Reveal button */
-          <Button
-            id="flip-btn"
-            onClick={onFlip}
-            className="w-full gap-2 py-5 text-base font-semibold shadow-md"
-            size="lg"
-          >
-            <Eye className="h-5 w-5" />
-            {t('flip')}
-          </Button>
-        ) : (
-          /* Mark incorrect / correct */
-          <>
+        <div className={cn("flex w-full items-center gap-3", canGoBack ? "pl-[66px]" : "")}>
+          {!isFlipped ? (
+            /* Reveal button */
             <Button
-              id="incorrect-btn"
-              onClick={onIncorrect}
-              variant="outline"
-              size="lg"
+              id="flip-btn"
+              onClick={onFlip}
               className={cn(
-                'flex-1 gap-2 border-incorrect/30 py-5 text-base font-semibold',
-                'hover:border-incorrect hover:bg-incorrect hover:text-incorrect-fg',
-                'transition-all duration-150'
+                "w-full gap-2 py-5 text-base font-semibold shadow-md",
+                canGoBack && "pr-[66px]"
               )}
-            >
-              <ThumbsDown className="h-5 w-5" />
-              {t('incorrect')}
-            </Button>
-            <Button
-              id="correct-btn"
-              onClick={onCorrect}
               size="lg"
-              className={cn(
-                'flex-1 gap-2 border-correct/30 py-5 text-base font-semibold',
-                'bg-correct text-correct-fg hover:opacity-90',
-                'transition-all duration-150'
-              )}
             >
-              <ThumbsUp className="h-5 w-5" />
-              {t('correct')}
+              <Eye className="h-5 w-5" />
+              {t('flip')}
             </Button>
-          </>
-        )}
+          ) : (
+            /* Mark incorrect / correct */
+            <>
+              <Button
+                id="incorrect-btn"
+                onClick={onIncorrect}
+                variant="outline"
+                size="lg"
+                className={cn(
+                  'flex-1 gap-2 border-incorrect/30 py-5 text-base font-semibold',
+                  'hover:border-incorrect hover:bg-incorrect hover:text-incorrect-fg',
+                  'transition-all duration-150'
+                )}
+              >
+                <ThumbsDown className="h-5 w-5" />
+                {t('incorrect')}
+              </Button>
+              <Button
+                id="correct-btn"
+                onClick={onCorrect}
+                size="lg"
+                className={cn(
+                  'flex-1 gap-2 border-correct/30 py-5 text-base font-semibold',
+                  'bg-correct text-correct-fg hover:opacity-90',
+                  'transition-all duration-150'
+                )}
+              >
+                <ThumbsUp className="h-5 w-5" />
+                {t('correct')}
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Keyboard hints */}
