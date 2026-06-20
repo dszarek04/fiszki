@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Header } from '@/components/layout/Header';
 import { ImportWizard } from '@/components/dashboard/ImportWizard/ImportWizard';
@@ -9,6 +10,7 @@ import { ResumeSessionBanner } from '@/components/dashboard/ResumeSessionBanner'
 
 export function DashboardPage() {
   const t = useTranslations('dashboard');
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -25,7 +27,7 @@ export function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <SearchBar />
+            <SearchBar query={searchQuery} onChange={setSearchQuery} />
             <ImportWizard />
           </div>
         </div>
@@ -34,7 +36,7 @@ export function DashboardPage() {
         <ResumeSessionBanner />
 
         {/* Deck grid */}
-        <DeckList />
+        <DeckList searchQuery={searchQuery} />
       </main>
     </div>
   );

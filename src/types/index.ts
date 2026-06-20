@@ -13,6 +13,7 @@ export interface Card {
   front: string;
   back: string;
   createdAt: Date;
+  image?: string;
 }
 
 // ─── Training Session ─────────────────────────────────────────────────────────

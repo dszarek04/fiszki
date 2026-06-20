@@ -24,11 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Type-check
-        run: npm run type-check
+      - name: Verify (Lint and Type-check)
+        run: npm run verify
 
       - name: Build
         run: npm run build

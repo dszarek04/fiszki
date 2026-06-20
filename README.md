@@ -138,8 +138,7 @@ npm run docker:down
 | `npm run dev:app` | Dev server directly -> `http://localhost:3000` |
 | `npm run build` | Production build |
 | `npm run start` | Serve production build |
-| `npm run lint` | ESLint |
-| `npm run type-check` | TypeScript `--noEmit` |
+| `npm run verify` | ESLint + TypeScript `--noEmit` checks |
 | `npm run docker:up` | Build/run Docker container 24/7 + register portless alias |
 | `npm run docker:down` | Stop Docker container + remove portless alias |
 
@@ -217,9 +216,8 @@ fiszki/
 
 GitHub Actions runs on push to `main` and all PRs:
 
-1. `npm run lint` — ESLint
-2. `npm run type-check` — TypeScript
-3. `npm run build` — full Next.js production build
+1. `npm run verify` — ESLint + TypeScript checks
+2. `npm run build` — full Next.js production build
 
 ---
 

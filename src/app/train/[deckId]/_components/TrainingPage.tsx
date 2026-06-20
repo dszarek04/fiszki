@@ -80,7 +80,7 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
   return (
     <main className="flex flex-1 flex-col overflow-x-hidden">
       {/* Top bar */}
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 py-4">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
@@ -97,7 +97,7 @@ export function TrainingPage({ deckId, shuffle }: TrainingPageProps) {
       </div>
 
       {/* Card area */}
-      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-start gap-8 px-4 pt-4 pb-12 sm:pt-8">
+      <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-start gap-8 px-4 pt-4 pb-12 sm:pt-8">
         {session.currentCard && (
           <FlashCard
             key={session.currentCard.id}

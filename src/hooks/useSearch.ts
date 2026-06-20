@@ -1,17 +1,17 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { db, searchCards } from '@/lib/db';
-import type { Card } from '@/types';
+import { db } from '@/lib/db';
+import type { Deck } from '@/types';
 
 // ─── useSearch ────────────────────────────────────────────────────────────────
 //
-// Debounced real-time search across all cards (or within a single deck).
+// Debounced real-time search across all decks (sets).
 //
 
-export function useSearch(deckId?: number, debounceMs = 200) {
+export function useSearch(debounceMs = 200) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Card[]>([]);
+  const [results, setResults] = useState<Deck[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -26,30 +26,16 @@ export function useSearch(deckId?: number, debounceMs = 200) {
       setIsSearching(true);
       try {
         const lc = q.toLowerCase();
-        let found: Card[];
-
-        if (deckId !== undefined) {
-          // Scoped to a single deck
-          found = await db.cards
-            .where('deckId')
-            .equals(deckId)
-            .filter(
-              (c) =>
-                c.front.toLowerCase().includes(lc) ||
-                c.back.toLowerCase().includes(lc)
-            )
-            .toArray();
-        } else {
-          // Global search
-          found = await searchCards(q);
-        }
+        const found = await db.decks
+          .filter((d) => d.name.toLowerCase().includes(lc))
+          .toArray();
 
         setResults(found);
       } finally {
         setIsSearching(false);
       }
     },
-    [deckId]
+    []
   );
 
   useEffect(() => {

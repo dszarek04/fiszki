@@ -5,9 +5,13 @@ import { Layers } from 'lucide-react';
 import { DeckCard } from './DeckCard';
 import { useDecks } from '@/hooks/useDecks';
 
-export function DeckList() {
+interface DeckListProps {
+  searchQuery: string;
+}
+
+export function DeckList({ searchQuery }: DeckListProps) {
   const t = useTranslations('dashboard');
-  const { decks, isLoading, deleteDeck } = useDecks();
+  const { decks, isLoading, deleteDeck } = useDecks(searchQuery);
 
   if (isLoading) {
     return (

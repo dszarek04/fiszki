@@ -7,9 +7,11 @@ import {
   BookOpen,
   Calendar,
   MoreVertical,
+  Pencil,
   Play,
   Settings,
   Trash2,
+  Type,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,7 +31,9 @@ import {
 } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import type { Deck } from '@/types';
+import { renameDeck } from '@/lib/db';
 
 interface DeckCardProps {
   deck: Deck;
@@ -39,11 +43,14 @@ interface DeckCardProps {
 export function DeckCard({ deck, onDelete }: DeckCardProps) {
   const t = useTranslations('dashboard');
   const tSettings = useTranslations('settings');
+  const tImport = useTranslations('import');
   const router = useRouter();
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [renameOpen, setRenameOpen] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+  const [newName, setNewName] = useState(deck.name);
 
   const formattedDate = new Intl.DateTimeFormat(undefined, {
     month: 'short',
@@ -82,6 +89,17 @@ export function DeckCard({ deck, onDelete }: DeckCardProps) {
               <DropdownMenuItem onClick={() => setSettingsOpen(true)}>
                 <Settings className="mr-2 h-3.5 w-3.5" />
                 {tSettings('title')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push(`/edit/${deck.id}`)}>
+                <Pencil className="mr-2 h-3.5 w-3.5" />
+                {t('editDeck')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                setNewName(deck.name);
+                setRenameOpen(true);
+              }}>
+                <Type className="mr-2 h-3.5 w-3.5" />
+                {t('renameDeck')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -189,6 +207,43 @@ export function DeckCard({ deck, onDelete }: DeckCardProps) {
                 setDeleteOpen(false);
               }}
               id={`confirm-delete-${deck.id}`}
+            >
+              {t('confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rename Modal */}
+      <Dialog open={renameOpen} onOpenChange={setRenameOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t('renameDeck')}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor={`rename-input-${deck.id}`}>{tImport('deckName')}</Label>
+              <Input
+                id={`rename-input-${deck.id}`}
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder={tImport('deckNamePlaceholder')}
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setRenameOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button
+              onClick={async () => {
+                if (newName.trim() && deck.id) {
+                  await renameDeck(deck.id, newName.trim());
+                  setRenameOpen(false);
+                }
+              }}
+              id={`confirm-rename-${deck.id}`}
+              disabled={!newName.trim()}
             >
               {t('confirm')}
             </Button>

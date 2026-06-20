@@ -9,10 +9,21 @@ import type { Deck } from '@/types';
 // Provides real-time reactive list of all decks plus CRUD helpers.
 //
 
-export function useDecks() {
+export function useDecks(searchQuery?: string) {
   const decks = useLiveQuery<Deck[]>(
-    () => db.decks.orderBy('createdAt').reverse().toArray(),
-    []
+    () => {
+      if (searchQuery && searchQuery.trim()) {
+        const lc = searchQuery.toLowerCase();
+        return db.decks
+          .filter((d) => d.name.toLowerCase().includes(lc))
+          .toArray()
+          .then((arr) => 
+            arr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          );
+      }
+      return db.decks.orderBy('createdAt').reverse().toArray();
+    },
+    [searchQuery]
   );
 
   return {

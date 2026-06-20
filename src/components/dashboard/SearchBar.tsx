@@ -1,21 +1,27 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useSearch } from '@/hooks/useSearch';
 
 interface SearchBarProps {
-  onResults?: (query: string) => void;
+  query: string;
+  onChange: (query: string) => void;
 }
 
-export function SearchBar({ onResults }: SearchBarProps) {
+export function SearchBar({ query, onChange }: SearchBarProps) {
   const t = useTranslations('dashboard');
-  const { query, setQuery, results, isSearching, hasQuery } = useSearch();
+  const router = useRouter();
+  const { setQuery, results, isSearching, hasQuery } = useSearch();
+
+  useEffect(() => {
+    setQuery(query);
+  }, [query, setQuery]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const q = e.target.value;
-    setQuery(q);
-    onResults?.(q);
+    onChange(e.target.value);
   }
 
   return (
@@ -28,11 +34,11 @@ export function SearchBar({ onResults }: SearchBarProps) {
         onChange={handleChange}
         placeholder={t('search')}
         className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-9 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary/30"
-        aria-label="Search flashcards"
+        aria-label="Search sets"
       />
       {hasQuery && (
         <button
-          onClick={() => setQuery('')}
+          onClick={() => onChange('')}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Clear search"
         >
@@ -52,16 +58,17 @@ export function SearchBar({ onResults }: SearchBarProps) {
             {results.length === 1 ? t('searchResults', { count: 1 }) : t('searchResultsPlural', { count: results.length })}
           </div>
           <ul className="max-h-60 overflow-y-auto">
-            {results.slice(0, 8).map((card) => (
+            {results.slice(0, 8).map((deck) => (
               <li
-                key={card.id}
-                className="px-3 py-2.5 hover:bg-accent/50 transition-colors cursor-default"
+                key={deck.id}
+                onClick={() => router.push(`/train/${deck.id}`)}
+                className="px-3 py-2.5 hover:bg-accent/50 transition-colors cursor-pointer"
               >
                 <p className="text-sm font-medium text-foreground truncate">
-                  {card.front.split('\n')[0]}
+                  {deck.name}
                 </p>
                 <p className="text-xs text-muted-foreground truncate mt-0.5">
-                  → {card.back}
+                  {deck.cardCount === 1 ? t('cards', { count: 1 }) : t('cardsPlural', { count: deck.cardCount })}
                 </p>
               </li>
             ))}

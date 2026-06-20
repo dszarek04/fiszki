@@ -154,3 +154,161 @@ export function readFileAsText(file: File): Promise<string> {
     reader.readAsText(file, 'UTF-8');
   });
 }
+
+// ─── LaTeX / Math Equation Tokenizer ──────────────────────────────────────────
+
+export interface MathToken {
+  type: 'text' | 'math' | 'block-math';
+  content: string;
+}
+
+export function parseMathText(text: string): MathToken[] {
+  if (!text) return [];
+
+  const hasExplicitDelimiters =
+    text.includes('$') ||
+    (text.includes('\\(') && text.includes('\\)')) ||
+    (text.includes('\\[') && text.includes('\\]'));
+
+  const len = text.length;
+
+  if (hasExplicitDelimiters) {
+    const tokens: MathToken[] = [];
+    let currentIdx = 0;
+
+    while (currentIdx < len) {
+      let foundDelim: { type: 'inline' | 'block'; start: number; end: number; delimLen: number } | null = null;
+      let minStart = len;
+
+      const doubleDollarIdx = text.indexOf('$$', currentIdx);
+      if (doubleDollarIdx !== -1 && doubleDollarIdx < minStart) {
+        const closeIdx = text.indexOf('$$', doubleDollarIdx + 2);
+        if (closeIdx !== -1) {
+          foundDelim = { type: 'block', start: doubleDollarIdx, end: closeIdx, delimLen: 2 };
+          minStart = doubleDollarIdx;
+        }
+      }
+
+      const singleDollarIdx = text.indexOf('$', currentIdx);
+      if (singleDollarIdx !== -1 && singleDollarIdx < minStart) {
+        if (text[singleDollarIdx + 1] !== '$' && (singleDollarIdx === 0 || text[singleDollarIdx - 1] !== '$')) {
+          let closeIdx = -1;
+          for (let i = singleDollarIdx + 1; i < len; i++) {
+            if (text[i] === '$' && text[i - 1] !== '\\' && text[i + 1] !== '$') {
+              closeIdx = i;
+              break;
+            }
+          }
+          if (closeIdx !== -1) {
+            foundDelim = { type: 'inline', start: singleDollarIdx, end: closeIdx, delimLen: 1 };
+            minStart = singleDollarIdx;
+          }
+        }
+      }
+
+      const inlineBraceIdx = text.indexOf('\\(', currentIdx);
+      if (inlineBraceIdx !== -1 && inlineBraceIdx < minStart) {
+        const closeIdx = text.indexOf('\\)', inlineBraceIdx + 2);
+        if (closeIdx !== -1) {
+          foundDelim = { type: 'inline', start: inlineBraceIdx, end: closeIdx, delimLen: 2 };
+          minStart = inlineBraceIdx;
+        }
+      }
+
+      const blockBraceIdx = text.indexOf('\\[', currentIdx);
+      if (blockBraceIdx !== -1 && blockBraceIdx < minStart) {
+        const closeIdx = text.indexOf('\\]', blockBraceIdx + 2);
+        if (closeIdx !== -1) {
+          foundDelim = { type: 'block', start: blockBraceIdx, end: closeIdx, delimLen: 2 };
+          minStart = blockBraceIdx;
+        }
+      }
+
+      if (foundDelim) {
+        if (foundDelim.start > currentIdx) {
+          tokens.push({
+            type: 'text',
+            content: text.substring(currentIdx, foundDelim.start),
+          });
+        }
+        tokens.push({
+          type: foundDelim.type === 'block' ? 'block-math' : 'math',
+          content: text.substring(foundDelim.start + foundDelim.delimLen, foundDelim.end),
+        });
+        currentIdx = foundDelim.end + foundDelim.delimLen;
+      } else {
+        tokens.push({
+          type: 'text',
+          content: text.substring(currentIdx),
+        });
+        break;
+      }
+    }
+    return tokens;
+  }
+
+  const tokens: MathToken[] = [];
+  let currentIdx = 0;
+
+  while (currentIdx < len) {
+    const nextBackslash = text.indexOf('\\', currentIdx);
+    if (nextBackslash === -1) {
+      tokens.push({ type: 'text', content: text.substring(currentIdx) });
+      break;
+    }
+
+    if (nextBackslash > currentIdx) {
+      tokens.push({ type: 'text', content: text.substring(currentIdx, nextBackslash) });
+    }
+
+    let scanIdx = nextBackslash + 1;
+    while (scanIdx < len && /[a-zA-Z]/.test(text[scanIdx])) {
+      scanIdx++;
+    }
+
+    let braceCount = 0;
+    let bracketCount = 0;
+    let continueScanning = true;
+
+    while (scanIdx < len && continueScanning) {
+      const char = text[scanIdx];
+      if (char === '{') {
+        braceCount++;
+        scanIdx++;
+      } else if (char === '}') {
+        braceCount--;
+        scanIdx++;
+      } else if (char === '[') {
+        bracketCount++;
+        scanIdx++;
+      } else if (char === ']') {
+        bracketCount--;
+        scanIdx++;
+      } else if (braceCount > 0 || bracketCount > 0) {
+        scanIdx++;
+      } else if (char === '_' || char === '^') {
+        scanIdx++;
+        if (scanIdx < len) {
+          if (text[scanIdx] === '{') {
+            braceCount++;
+            scanIdx++;
+          } else {
+            scanIdx++;
+          }
+        }
+      } else {
+        continueScanning = false;
+      }
+    }
+
+    const mathContent = text.substring(nextBackslash, scanIdx);
+    if (mathContent.length > 1) {
+      tokens.push({ type: 'math', content: mathContent });
+    } else {
+      tokens.push({ type: 'text', content: mathContent });
+    }
+    currentIdx = scanIdx;
+  }
+
+  return tokens;
+}
